@@ -154,23 +154,4 @@
     "Writing": "Technical writing, creative writing, essays",
     "Philosophy": "Epistemology, Philosophy of Mind",
     "Tools": "Vim, GCC, GDB, Make, Git"
-  },
-
-  "notes": {
-    "status": "Coming Soon",
-    "text": "Learning notes coming soon.",
-    "hint": "This will become a knowledge base."
-  },
-
-  "articles": {
-    "status": "In Progress",
-    "text": "Technical articles in progress.",
-    "hint": "Writing about systems programming, mathematics, and philosophy."
-  },
-
-  "downloads": {
-    "status": "Planning",
-    "text": "Resources being prepared.",
-    "hint": "PDF notes, cheat sheets, templates and study guides."
-  }
-}
+  }}
