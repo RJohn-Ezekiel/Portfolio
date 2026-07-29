@@ -15,10 +15,6 @@ Books               books              116–126
 Timeline            timeline           128–140
 TODO                todo              142–148
 Skills              skills            150–157
-Notes               notes             159–163
-Articles            articles          165–169
-Downloads           downloads         171–175
-
 
 
 2. Project card format (editable in data.json lines 62-96):
@@ -43,4 +39,4 @@ Downloads           downloads         171–175
 
 4. Add new year objects or events freely.
 5. TODO format (editable in data.json lines 142-148): a simple array of strings.
-6. Notes / Articles / Downloads each have text (main message) and hint (smaller sub-text).
+
