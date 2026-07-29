@@ -1,0 +1,176 @@
+{
+  "owner": {
+    "name": "R. John Ezekiel",
+    "tagline": ["Programmer", "Writer", "Independent Learner"],
+    "motto": "Understanding before implementation.",
+    "email": "r.johnezekiel3@gmail.com",
+    "github": "https://github.com/RJohn-Ezekiel",
+    "linkedin": "https://www.linkedin.com/in/john-ezekiel-521871425"
+  },
+
+  "philosophy": [
+    "Learn from first principles.",
+    "Curiosity over credentials.",
+    "Build carefully.",
+    "Teach clearly.",
+    "Prefer understanding to memorisation."
+  ],
+
+  "mission": [
+    "Become an excellent systems programmer",
+    "Build educational software",
+    "Create high-quality educational content",
+    "Write books",
+    "Publish technical articles",
+    "Continue lifelong learning"
+  ],
+
+  "principles": [
+    "Understanding before implementation",
+    "Learn deeply",
+    "Build carefully",
+    "Write clearly",
+    "Stay curious",
+    "Simplicity is earned",
+    "Complexity should have purpose"
+  ],
+
+  "interests": [
+    "Computer Science",
+    "Operating Systems",
+    "Programming Languages",
+    "Discrete Mathematics",
+    "Philosophy",
+    "Psychology",
+    "Theology",
+    "Astronomy",
+    "Writing",
+    "Education"
+  ],
+
+  "currentFocus": [
+    "Modern C",
+    "Modern C++",
+    "Operating Systems",
+    "Linux",
+    "Discrete Mathematics",
+    "Human Anatomy",
+    "Educational Content",
+    "Novel Writing"
+  ],
+
+  "projects": [
+    {
+      "title": "Modern C Journey",
+      "desc": "Working through Modern C by Jean Gustedt with notes and exercises.",
+      "status": "In Progress",
+      "tags": "C \u00b7 Tutorial",
+      "url": "https://github.com/RJohn-Ezekiel"
+    },
+    {
+      "title": "Operating Systems Notes",
+      "desc": "Study notes and experiments in operating system concepts.",
+      "status": "In Progress",
+      "tags": "C \u00b7 OS",
+      "url": "https://github.com/RJohn-Ezekiel"
+    },
+    {
+      "title": "Brainfuck Experiments",
+      "desc": "Implementations and explorations of the Brainfuck esolang.",
+      "status": "Exploratory",
+      "tags": "C \u00b7 Esolang",
+      "url": "https://github.com/RJohn-Ezekiel"
+    },
+    {
+      "title": "Novel",
+      "desc": "A long-form writing project.",
+      "status": "In Progress",
+      "tags": "Fiction"
+    },
+    {
+      "title": "Educational Content",
+      "desc": "Planned learning resources and tutorials.",
+      "status": "Planning",
+      "tags": "Writing"
+    }
+  ],
+
+  "reading": {
+    "current": [
+      "Modern C \u2014 Jean Gustedt",
+      "OS: Three Easy Pieces \u2014 Arpaci-Dusseau",
+      "Human Anatomy \u2014 Marieb & Hoehn"
+    ],
+    "completed": [
+      "The C Programming Language \u2014 K&R"
+    ],
+    "wishlist": [
+      "Discrete Mathematics \u2014 Rosen",
+      "TAOCP \u2014 Knuth"
+    ],
+    "reference": [
+      "C: A Reference Manual \u2014 Harbison & Steele"
+    ]
+  },
+
+  "books": {
+    "wishlist": [
+      "Discrete Mathematics \u2014 Rosen",
+      "TAOCP \u2014 Knuth",
+      "G\u00f6del, Escher, Bach \u2014 Hofstadter"
+    ],
+    "reference": [
+      "C: A Reference Manual \u2014 Harbison & Steele",
+      "Modern C \u2014 Gustedt"
+    ]
+  },
+
+  "timeline": [
+    {
+      "year": "2026",
+      "events": [
+        "Started Modern C",
+        "Started Modern C++",
+        "Operating Systems study",
+        "Created portfolio",
+        "Novel writing",
+        "Educational content planning"
+      ]
+    }
+  ],
+
+  "todo": [
+    "Publish first YouTube video",
+    "Complete novel first draft",
+    "Write technical articles",
+    "Create educational course",
+    "Launch freelancing"
+  ],
+
+  "skills": {
+    "Programming": "C, C++, JavaScript, Python, Shell",
+    "Systems": "Linux, Git, Operating Systems, CLI",
+    "Mathematics": "Discrete Mathematics, Linear Algebra",
+    "Writing": "Technical writing, creative writing, essays",
+    "Philosophy": "Epistemology, Philosophy of Mind",
+    "Tools": "Vim, GCC, GDB, Make, Git"
+  },
+
+  "notes": {
+    "status": "Coming Soon",
+    "text": "Learning notes coming soon.",
+    "hint": "This will become a knowledge base."
+  },
+
+  "articles": {
+    "status": "In Progress",
+    "text": "Technical articles in progress.",
+    "hint": "Writing about systems programming, mathematics, and philosophy."
+  },
+
+  "downloads": {
+    "status": "Planning",
+    "text": "Resources being prepared.",
+    "hint": "PDF notes, cheat sheets, templates and study guides."
+  }
+}

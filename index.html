@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R. John Ezekiel</title>
+<meta name="description" content="R. John Ezekiel — Programmer, Writer, Independent Learner. Personal website and living notebook.">
+<meta name="theme-color" content="#151515">
+<meta property="og:title" content="R. John Ezekiel">
+<meta property="og:description" content="Programmer, Writer, Independent Learner.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rje.sh">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="R. John Ezekiel">
+<meta name="twitter:description" content="Programmer, Writer, Independent Learner.">
+<link rel="canonical" href="https://rje.sh">
+<style>
+:root {
+  --bg: #151515;
+  --surface: #202020;
+  --border: #3b3b3b;
+  --text: #c8c8c8;
+  --muted: #8a8a8a;
+  --highlight: #ffffff;
+  --content-width: 800px;
+  --term-size: 310px;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+::selection { background: #555; color: #fff; }
+:focus-visible { outline: 2px solid var(--highlight); outline-offset: 2px; }
+
+a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color .15s;
+}
+a:hover, a:focus-visible { color: var(--highlight); }
+
+#terminal-wrap {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: var(--term-size);
+  height: var(--term-size);
+  z-index: 1000;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+#terminal-wrap::before {
+  content: "bash";
+  display: block;
+  padding: 4px 10px;
+  font-size: 10px;
+  color: var(--muted);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+  line-height: 1.4;
+}
+#terminal {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  font-size: 12px;
+  line-height: 1.5;
+  cursor: text;
+}
+#terminal::-webkit-scrollbar { width: 4px; }
+#terminal::-webkit-scrollbar-track { background: var(--bg); }
+#terminal::-webkit-scrollbar-thumb { background: var(--border); }
+
+#terminal-content {
+  padding: 8px 10px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.line { white-space: pre; word-break: break-all; margin-bottom: 1px; }
+.prompt { color: var(--muted); user-select: none; }
+.input { color: var(--highlight); }
+.output-line { color: var(--text); margin-bottom: 1px; white-space: pre; }
+.output-line.highlight { color: var(--highlight); }
+.output-line.muted { color: var(--muted); }
+.output-line.error { color: #a55; }
+.intro-line { color: var(--muted); margin-bottom: 1px; }
+.intro-line.done { color: var(--highlight); }
+
+#cursor {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  background: var(--text);
+  animation: blink 1s step-end infinite;
+  flex-shrink: 0;
+  vertical-align: text-bottom;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+#skip-btn {
+  position: fixed;
+  top: 18px;
+  right: calc(var(--term-size) + 24px);
+  z-index: 1001;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color .15s;
+}
+#skip-btn:hover, #skip-btn:focus-visible { color: var(--highlight); }
+
+#nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  transition: opacity .6s ease;
+}
+#nav.hidden { display: none; }
+#nav > div {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+}
+#nav ul {
+  list-style: none;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+#nav li { flex-shrink: 0; }
+#nav a {
+  display: block;
+  padding: 10px 14px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+#nav a:hover, #nav a:focus-visible { color: var(--highlight); }
+#nav a.active { color: var(--highlight); border-bottom-color: var(--highlight); }
+
+main {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.section {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity .3s ease, max-height .3s ease, margin .3s ease;
+  margin-top: 0;
+}
+.section.visible {
+  opacity: 1;
+  max-height: 3000px;
+  margin-top: 50px;
+  overflow: visible;
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 22px;
+  user-select: none;
+}
+
+#hero { text-align: center; padding: 20px 0; }
+#hero h1 {
+  font-size: 2.5rem;
+  font-weight: normal;
+  color: var(--highlight);
+  line-height: 1.15;
+  letter-spacing: -.03em;
+}
+#hero .sub {
+  color: var(--muted);
+  margin-top: 12px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.8;
+}
+#hero .sub span { display: block; }
+#hero .motto {
+  margin-top: 24px;
+  font-style: italic;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.about-text { max-width: 620px; }
+.about-text p { margin-bottom: 16px; }
+
+.item-list { list-style: none; }
+.item-list li {
+  padding: 3px 0;
+  padding-left: 18px;
+  position: relative;
+}
+.item-list li::before {
+  content: "-";
+  position: absolute;
+  left: 4px;
+  color: var(--muted);
+}
+
+.pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  align-items: center;
+}
+.pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.pipeline-step span {
+  display: inline-block;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: .85rem;
+  color: var(--text);
+}
+.pipeline-step .arrow {
+  padding: 0 6px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  font-size: .85rem;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+}
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 18px;
+  transition: border-color .2s, background .2s;
+}
+.project-card:hover { border-color: var(--text); background: #262626; }
+.project-card h3 {
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--highlight);
+  margin-bottom: 6px;
+}
+.project-card .project-desc {
+  font-size: .85rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+.project-meta { margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+.project-status {
+  font-size: .75rem;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+}
+.project-tags { font-size: .75rem; color: var(--muted); }
+.project-card .project-link { font-size: .85rem; color: var(--muted); }
+.project-card .project-link:hover { color: var(--highlight); }
+
+.reading-grid, .books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 22px;
+}
+.reading-group h3, .books-group h3 {
+  font-size: .85rem;
+  font-weight: normal;
+  color: var(--highlight);
+  margin-bottom: 8px;
+}
+.reading-group ul, .books-group ul { list-style: none; }
+.reading-group li, .books-group li {
+  padding: 2px 0;
+  padding-left: 14px;
+  position: relative;
+  font-size: .88rem;
+  color: var(--muted);
+}
+.reading-group li::before, .books-group li::before {
+  content: "-";
+  position: absolute;
+  left: 2px;
+  color: var(--muted);
+}
+
+.timeline { list-style: none; }
+.timeline li {
+  padding: 5px 0 5px 20px;
+  position: relative;
+  border-left: 1px solid var(--border);
+  margin-left: 8px;
+  padding-left: 24px;
+}
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 11px;
+  width: 7px;
+  height: 7px;
+  background: var(--muted);
+}
+.timeline .year {
+  color: var(--highlight);
+  font-size: .85rem;
+}
+.timeline .event { color: var(--muted); font-size: .9rem; }
+
+.git-log { list-style: none; font-size: .88rem; }
+.git-log li {
+  padding: 4px 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.git-log .hash { color: var(--highlight); }
+.git-log .date { color: var(--muted); }
+.git-log .msg { color: var(--text); }
+
+.todo-list { list-style: none; }
+.todo-list li {
+  padding: 5px 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+.todo-list li::before {
+  content: "[ ]";
+  color: var(--muted);
+  margin-right: 10px;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+.skills-group h3 {
+  font-size: .85rem;
+  font-weight: normal;
+  color: var(--highlight);
+  margin-bottom: 5px;
+}
+.skills-group p { color: var(--muted); line-height: 1.8; font-size: .88rem; }
+
+.contact-list { list-style: none; }
+.contact-list li {
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.contact-list .label {
+  color: var(--muted);
+  min-width: 75px;
+  flex-shrink: 0;
+}
+.contact-list a { color: var(--text); }
+.contact-list a:hover { color: var(--highlight); }
+.copy-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: .75rem;
+  padding: 1px 6px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.copy-btn:hover, .copy-btn:focus-visible { color: var(--highlight); border-color: var(--highlight); }
+.copy-btn.copied { color: var(--highlight); border-color: var(--highlight); }
+
+.placeholder-box {
+  border: 1px dashed var(--border);
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: .85rem;
+}
+.placeholder-box p { margin-bottom: 4px; }
+.placeholder-box .hint { font-size: .8rem; opacity: .7; }
+
+#footer {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  color: var(--muted);
+  font-size: .82rem;
+  text-align: center;
+}
+#footer p { margin-bottom: 4px; }
+
+@media (max-width: 1200px) { :root { --term-size: 270px; } }
+@media (max-width: 1000px) { :root { --term-size: 240px; } }
+@media (max-width: 860px) {
+  :root { --term-size: 220px; }
+  #terminal { font-size: 11px; }
+  #terminal-content { padding: 6px 8px; }
+  #cursor { width: 6px; height: 12px; }
+}
+@media (max-width: 700px) {
+  body { font-size: 14px; }
+  #terminal-wrap { top: 10px; right: 10px; }
+  #skip-btn { top: 12px; right: calc(var(--term-size) + 18px); font-size: 10px; }
+  main { padding: 36px 20px 60px; }
+  #nav > div { padding: 0 16px; }
+  #nav a { padding: 8px 10px; font-size: 11px; }
+  #hero h1 { font-size: 1.8rem; }
+  .projects-grid, .skills-grid, .reading-grid, .books-grid { grid-template-columns: 1fr; }
+  .pipeline-step span { padding: 6px 10px; font-size: .8rem; }
+}
+@media (max-width: 500px) {
+  :root { --term-size: 170px; }
+  #terminal-wrap { top: 6px; right: 6px; }
+  #skip-btn { top: 8px; right: calc(var(--term-size) + 14px); font-size: 9px; }
+  #terminal { font-size: 10px; line-height: 1.4; }
+  #terminal-content { padding: 4px 6px; }
+  #cursor { width: 5px; height: 10px; }
+  #hero h1 { font-size: 1.4rem; }
+  main { padding: 28px 16px 40px; }
+  .section.visible { margin-top: 36px; }
+  #nav a { padding: 6px 8px; font-size: 10px; }
+  #terminal-wrap::before { font-size: 9px; padding: 3px 8px; }
+}
+@media (prefers-reduced-motion) {
+  #cursor { animation: none; opacity: 0; }
+}
+@media print {
+  #terminal-wrap { display: none; }
+  #nav { display: none !important; }
+  .section { opacity: 1; max-height: none; overflow: visible; margin-top: 24px; }
+  #skip-btn { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="terminal-wrap">
+  <div id="terminal" role="log" aria-label="Terminal session">
+    <div id="terminal-content">
+      <span id="cursor" aria-hidden="true"></span>
+    </div>
+  </div>
+</div>
+
+<button id="skip-btn" hidden>Skip Intro</button>
+
+<nav id="nav" class="hidden" aria-label="Section navigation">
+  <div>
+    <ul>
+      <li><a href="#hero" class="active">Home</a></li>
+      <li><a href="#mission">Mission</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#books">Books</a></li>
+      <li><a href="#notes">Notes</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+<section id="hero" class="section">
+  <h1>R. John Ezekiel</h1>
+  <p class="sub">
+    <span>Programmer</span>
+    <span>Writer</span>
+    <span>Independent Learner</span>
+  </p>
+  <p class="motto">Understanding before implementation.</p>
+</section>
+
+<section id="philosophy" class="section">
+  <h2 class="section-title">Philosophy</h2>
+  <div class="about-text">
+    <p>Learn from first principles. Curiosity over credentials. Build carefully. Teach clearly. Prefer understanding to memorisation.</p>
+    <p>Every subject is approached the same way: start at the foundation, question every assumption, and reconstruct the idea from scratch. Only then is understanding genuine.</p>
+    <p>This approach is slow by design. Depth cannot be rushed.</p>
+  </div>
+</section>
+
+<section id="mission" class="section">
+  <h2 class="section-title">Mission</h2>
+  <ul class="item-list">
+    <li>Become an excellent systems programmer</li>
+    <li>Build educational software</li>
+    <li>Create high-quality educational content</li>
+    <li>Write books</li>
+    <li>Publish technical articles</li>
+    <li>Continue lifelong learning</li>
+  </ul>
+</section>
+
+<section id="principles" class="section">
+  <h2 class="section-title">Principles</h2>
+  <ul class="item-list">
+    <li>Understanding before implementation</li>
+    <li>Learn deeply</li>
+    <li>Build carefully</li>
+    <li>Write clearly</li>
+    <li>Stay curious</li>
+    <li>Simplicity is earned</li>
+    <li>Complexity should have purpose</li>
+  </ul>
+</section>
+
+<section id="interests" class="section">
+  <h2 class="section-title">Interests</h2>
+  <ul class="item-list">
+    <li>Computer Science</li>
+    <li>Operating Systems</li>
+    <li>Programming Languages</li>
+    <li>Discrete Mathematics</li>
+    <li>Philosophy</li>
+    <li>Psychology</li>
+    <li>Theology</li>
+    <li>Astronomy</li>
+    <li>Writing</li>
+    <li>Education</li>
+  </ul>
+</section>
+
+<section id="current-focus" class="section">
+  <h2 class="section-title">Current Focus</h2>
+  <ul class="item-list">
+    <li>Modern C</li>
+    <li>Modern C++</li>
+    <li>Operating Systems</li>
+    <li>Linux</li>
+    <li>Discrete Mathematics</li>
+    <li>Human Anatomy</li>
+    <li>Educational Content</li>
+    <li>Novel Writing</li>
+  </ul>
+</section>
+
+<section id="learning-process" class="section">
+  <h2 class="section-title">Learning Process</h2>
+  <div class="pipeline">
+    <span class="pipeline-step"><span>Read</span><span class="arrow">&rarr;</span></span>
+    <span class="pipeline-step"><span>Experiment</span><span class="arrow">&rarr;</span></span>
+    <span class="pipeline-step"><span>Break</span><span class="arrow">&rarr;</span></span>
+    <span class="pipeline-step"><span>Understand</span><span class="arrow">&rarr;</span></span>
+    <span class="pipeline-step"><span>Write Notes</span><span class="arrow">&rarr;</span></span>
+    <span class="pipeline-step"><span>Teach</span></span>
+  </div>
+</section>
+
+<section id="projects" class="section">
+  <h2 class="section-title">Projects</h2>
+  <div class="projects-grid" id="projects-grid">
+  </div>
+</section>
+
+<section id="reading" class="section">
+  <h2 class="section-title">Reading</h2>
+  <div class="reading-grid" id="reading-grid">
+  </div>
+</section>
+
+<section id="books" class="section">
+  <h2 class="section-title">Books</h2>
+  <div class="books-grid" id="books-grid">
+  </div>
+</section>
+
+<section id="timeline" class="section">
+  <h2 class="section-title">Timeline</h2>
+  <ul class="timeline" id="timeline-list">
+  </ul>
+</section>
+
+<section id="todo" class="section">
+  <h2 class="section-title">TODO</h2>
+  <ul class="todo-list" id="todo-list">
+  </ul>
+</section>
+
+<section id="skills" class="section">
+  <h2 class="section-title">Skills</h2>
+  <div class="skills-grid" id="skills-grid">
+  </div>
+</section>
+
+<section id="notes" class="section">
+  <h2 class="section-title">Notes</h2>
+  <div class="placeholder-box" id="notes-box"></div>
+</section>
+
+<section id="articles" class="section">
+  <h2 class="section-title">Articles</h2>
+  <div class="placeholder-box" id="articles-box"></div>
+</section>
+
+<section id="downloads" class="section">
+  <h2 class="section-title">Downloads</h2>
+  <div class="placeholder-box" id="downloads-box"></div>
+</section>
+
+<section id="contact" class="section">
+  <h2 class="section-title">Contact</h2>
+  <ul class="contact-list">
+    <li><span class="label">GitHub</span> <a href="https://github.com/RJohn-Ezekiel" target="_blank" rel="noopener">github.com/RJohn-Ezekiel</a></li>
+    <li><span class="label">LinkedIn</span> <a href="https://www.linkedin.com/in/john-ezekiel-521871425" target="_blank" rel="noopener">linkedin.com/in/john-ezekiel</a></li>
+    <li><span class="label">Email</span> <a href="mailto:r.johnezekiel3@gmail.com">r.johnezekiel3@gmail.com</a> <button class="copy-btn" data-email="r.johnezekiel3@gmail.com" aria-label="Copy email">[copy]</button></li>
+  </ul>
+</section>
+
+<footer id="footer" class="section">
+  <p>Built with one HTML file.</p>
+  <p>Hosted on GitHub Pages.</p>
+  <p>&copy; <span id="year"></span> R. John Ezekiel</p>
+</footer>
+
+</main>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ===================== Configuration ===================== */
+  var CONFIG = {
+    owner: {
+      name: 'R. John Ezekiel',
+      tagline: ['Programmer', 'Writer', 'Independent Learner'],
+      motto: 'Understanding before implementation.',
+      email: 'r.johnezekiel3@gmail.com',
+      github: 'https://github.com/RJohn-Ezekiel',
+      linkedin: 'https://www.linkedin.com/in/john-ezekiel-521871425'
+    },
+    prompt: 'rje@portfolio:~$',
+    storageKey: 'rje_intro_seen',
+    timing: {
+      bootLine: 100,
+      bootDone: 300,
+      charMin: 9, charMax: 17,
+      spaceMin: 3, spaceMax: 7,
+      enterPause: 70,
+      outMin: 12, outMax: 30,
+      cmdGapMin: 90, cmdGapMax: 180,
+      sectionDelay: 80
+    },
+    philosophy: [
+      'Learn from first principles.',
+      'Curiosity over credentials.',
+      'Build carefully.',
+      'Teach clearly.',
+      'Prefer understanding to memorisation.'
+    ],
+    mission: [
+      'Become an excellent systems programmer',
+      'Build educational software',
+      'Create high-quality educational content',
+      'Write books',
+      'Publish technical articles',
+      'Continue lifelong learning'
+    ],
+    principles: [
+      'Understanding before implementation',
+      'Learn deeply',
+      'Build carefully',
+      'Write clearly',
+      'Stay curious',
+      'Simplicity is earned',
+      'Complexity should have purpose'
+    ],
+    interests: [
+      'Computer Science', 'Operating Systems', 'Programming Languages',
+      'Discrete Mathematics', 'Philosophy', 'Psychology',
+      'Theology', 'Astronomy', 'Writing', 'Education'
+    ],
+    currentFocus: [
+      'Modern C', 'Modern C++', 'Operating Systems', 'Linux',
+      'Discrete Mathematics', 'Human Anatomy', 'Educational Content', 'Novel Writing'
+    ],
+    projects: [
+      { title: 'Modern C Journey', desc: 'Working through Modern C by Jean Gustedt with notes and exercises.', status: 'In Progress', tags: 'C \u00b7 Tutorial', url: 'https://github.com/RJohn-Ezekiel' },
+      { title: 'Operating Systems Notes', desc: 'Study notes and experiments in operating system concepts.', status: 'In Progress', tags: 'C \u00b7 OS', url: 'https://github.com/RJohn-Ezekiel' },
+      { title: 'Brainfuck Experiments', desc: 'Implementations and explorations of the Brainfuck esolang.', status: 'Exploratory', tags: 'C \u00b7 Esolang', url: 'https://github.com/RJohn-Ezekiel' },
+      { title: 'Novel', desc: 'A long-form writing project.', status: 'In Progress', tags: 'Fiction' },
+      { title: 'Educational Content', desc: 'Planned learning resources and tutorials.', status: 'Planning', tags: 'Writing' }
+    ],
+    reading: {
+      current: ['Modern C \u2014 Jean Gustedt', 'OS: Three Easy Pieces \u2014 Arpaci-Dusseau', 'Human Anatomy \u2014 Marieb & Hoehn'],
+      completed: ['The C Programming Language \u2014 K&R'],
+      wishlist: ['Discrete Mathematics \u2014 Rosen', 'TAOCP \u2014 Knuth'],
+      reference: ['C: A Reference Manual \u2014 Harbison & Steele']
+    },
+    books: {
+      wishlist: ['Discrete Mathematics \u2014 Rosen', 'TAOCP \u2014 Knuth', 'G\u00f6del, Escher, Bach \u2014 Hofstadter'],
+      reference: ['C: A Reference Manual \u2014 Harbison & Steele', 'Modern C \u2014 Gustedt']
+    },
+    timeline: [
+      { year: '2026', events: ['Started Modern C', 'Started Modern C++', 'Operating Systems study', 'Created portfolio', 'Novel writing', 'Educational content planning'] }
+    ],
+    todo: [
+      'Publish first YouTube video',
+      'Complete novel first draft',
+      'Write technical articles',
+      'Create educational course',
+      'Launch freelancing'
+    ],
+    skills: {
+      'Programming': 'C, C++, JavaScript, Python, Shell',
+      'Systems': 'Linux, Git, Operating Systems, CLI',
+      'Mathematics': 'Discrete Mathematics, Linear Algebra',
+      'Writing': 'Technical writing, creative writing, essays',
+      'Philosophy': 'Epistemology, Philosophy of Mind',
+      'Tools': 'Vim, GCC, GDB, Make, Git'
+    }
+  };
+
+  /* ===================== Utilities ===================== */
+  var U = {
+    rand: function(min, max) { return min + Math.random() * (max - min); },
+    sleep: function(ms) { return new Promise(function(r) { setTimeout(r, ms); }); },
+    qs: function(s, ctx) { return (ctx || document).querySelector(s); },
+    qsa: function(s, ctx) { return Array.from((ctx || document).querySelectorAll(s)); },
+    escape: function(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  };
+
+  /* ===================== Renderers ===================== */
+  function renderProjects() {
+    var grid = U.qs('#projects-grid');
+    if (!grid) return;
+    var frag = document.createDocumentFragment();
+    CONFIG.projects.forEach(function(p) {
+      var card = document.createElement('div');
+      card.className = 'project-card';
+      card.innerHTML = '<h3>' + U.escape(p.title) + '</h3>' +
+        '<p class="project-desc">' + U.escape(p.desc) + '</p>' +
+        '<div class="project-meta"><span class="project-status">' + U.escape(p.status) + '</span><span class="project-tags">' + U.escape(p.tags) + '</span></div>' +
+        (p.url ? '<a class="project-link" href="' + U.escape(p.url) + '" target="_blank" rel="noopener">GitHub \u2192</a>' : '');
+      frag.appendChild(card);
+    });
+    grid.appendChild(frag);
+  }
+
+  function renderReading() {
+    var grid = U.qs('#reading-grid');
+    if (!grid) return;
+    var frag = document.createDocumentFragment();
+    var cats = [
+      { label: 'Currently Reading', items: CONFIG.reading.current },
+      { label: 'Completed', items: CONFIG.reading.completed },
+      { label: 'Wishlist', items: CONFIG.reading.wishlist },
+      { label: 'Reference', items: CONFIG.reading.reference }
+    ];
+    cats.forEach(function(cat) {
+      if (!cat.items || cat.items.length === 0) return;
+      var group = document.createElement('div');
+      group.className = 'reading-group';
+      var h = document.createElement('h3');
+      h.textContent = cat.label;
+      group.appendChild(h);
+      var ul = document.createElement('ul');
+      cat.items.forEach(function(item) {
+        var li = document.createElement('li');
+        li.textContent = item;
+        ul.appendChild(li);
+      });
+      group.appendChild(ul);
+      frag.appendChild(group);
+    });
+    grid.appendChild(frag);
+  }
+
+  function renderBooks() {
+    var grid = U.qs('#books-grid');
+    if (!grid) return;
+    var frag = document.createDocumentFragment();
+    var cats = [
+      { label: 'Wishlist', items: CONFIG.books.wishlist },
+      { label: 'Reference', items: CONFIG.books.reference }
+    ];
+    cats.forEach(function(cat) {
+      if (!cat.items || cat.items.length === 0) return;
+      var group = document.createElement('div');
+      group.className = 'books-group';
+      var h = document.createElement('h3');
+      h.textContent = cat.label;
+      group.appendChild(h);
+      var ul = document.createElement('ul');
+      cat.items.forEach(function(item) {
+        var li = document.createElement('li');
+        li.textContent = item;
+        ul.appendChild(li);
+      });
+      group.appendChild(ul);
+      frag.appendChild(group);
+    });
+    grid.appendChild(frag);
+  }
+
+  function renderTimeline() {
+    var list = U.qs('#timeline-list');
+    if (!list) return;
+    var frag = document.createDocumentFragment();
+    CONFIG.timeline.forEach(function(entry) {
+      var li = document.createElement('li');
+      var y = document.createElement('span');
+      y.className = 'year';
+      y.textContent = entry.year;
+      li.appendChild(y);
+      frag.appendChild(li);
+      entry.events.forEach(function(ev) {
+        var el = document.createElement('li');
+        var sp = document.createElement('span');
+        sp.className = 'event';
+        sp.textContent = ev;
+        el.appendChild(sp);
+        frag.appendChild(el);
+      });
+    });
+    list.appendChild(frag);
+  }
+
+  function renderTodo() {
+    var list = U.qs('#todo-list');
+    if (!list) return;
+    var frag = document.createDocumentFragment();
+    CONFIG.todo.forEach(function(item) {
+      var li = document.createElement('li');
+      li.textContent = item;
+      frag.appendChild(li);
+    });
+    list.appendChild(frag);
+  }
+
+  function renderSkills() {
+    var grid = U.qs('#skills-grid');
+    if (!grid) return;
+    var frag = document.createDocumentFragment();
+    Object.keys(CONFIG.skills).forEach(function(key) {
+      var group = document.createElement('div');
+      group.className = 'skills-group';
+      var h = document.createElement('h3');
+      h.textContent = key;
+      var p = document.createElement('p');
+      p.textContent = CONFIG.skills[key];
+      group.appendChild(h);
+      group.appendChild(p);
+      frag.appendChild(group);
+    });
+    grid.appendChild(frag);
+  }
+
+  function renderPlaceholder(id, data) {
+    var box = U.qs('#' + id + '-box');
+    if (!box) return;
+    var p = document.createElement('p');
+    p.textContent = data.text || '';
+    box.appendChild(p);
+    var hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.textContent = data.hint || '';
+    box.appendChild(hint);
+  }
+
+  /* ===================== Typing Engine ===================== */
+  var Typing = {
+    delay: function(char) {
+      return char === ' '
+        ? U.rand(CONFIG.timing.spaceMin, CONFIG.timing.spaceMax)
+        : U.rand(CONFIG.timing.charMin, CONFIG.timing.charMax);
+    },
+    typeText: function(text, element) {
+      var self = this;
+      return new Promise(function(resolve) {
+        var i = 0, len = text.length;
+        function next() {
+          if (i >= len) { resolve(); return; }
+          element.textContent += text[i];
+          i++;
+          Terminal.scrollDown();
+          setTimeout(next, self.delay(text[i-1]));
+        }
+        next();
+      });
+    }
+  };
+
+  /* ===================== Terminal Engine ===================== */
+  var Terminal = {
+    el: null, content: null, cursor: null, input: null,
+    interactive: false, cmdHistory: [], histIdx: -1,
+
+    init: function() {
+      this.el = U.qs('#terminal');
+      this.content = U.qs('#terminal-content');
+      this.cursor = U.qs('#cursor');
+    },
+
+    addLine: function(text, className) {
+      var line = document.createElement('div');
+      line.className = 'line' + (className ? ' ' + className : '');
+      line.textContent = text;
+      this.content.insertBefore(line, this.cursor);
+      this.scrollDown();
+      return line;
+    },
+
+    addOutputLine: function(text, className) {
+      var line = document.createElement('div');
+      line.className = 'output-line' + (className ? ' ' + className : '');
+      line.textContent = text;
+      this.content.insertBefore(line, this.cursor);
+      this.scrollDown();
+      return line;
+    },
+
+    createTypingLine: function(promptText) {
+      var line = document.createElement('div');
+      line.className = 'line';
+      var prompt = document.createElement('span');
+      prompt.className = 'prompt';
+      prompt.textContent = promptText || CONFIG.prompt + ' ';
+      this.input = document.createElement('span');
+      this.input.className = 'input';
+      line.appendChild(prompt);
+      line.appendChild(this.input);
+      if (this.cursor.parentNode) this.cursor.parentNode.removeChild(this.cursor);
+      line.appendChild(this.cursor);
+      this.content.appendChild(line);
+      this.scrollDown();
+      return this.input;
+    },
+
+    commitLine: function() {
+      if (this.cursor.parentNode) this.cursor.parentNode.removeChild(this.cursor);
+      this.content.appendChild(this.cursor);
+      this.scrollDown();
+    },
+
+    clear: function() {
+      var kids = this.content.children;
+      var arr = [];
+      for (var i = 0; i < kids.length; i++) {
+        if (kids[i] !== this.cursor) arr.push(kids[i]);
+      }
+      for (var j = 0; j < arr.length; j++) this.content.removeChild(arr[j]);
+      this.scrollDown();
+    },
+
+    scrollDown: function() { this.el.scrollTop = this.el.scrollHeight; },
+
+    enterInteractiveMode: function() {
+      var self = this;
+      this.interactive = true;
+      this.showPrompt();
+      document.addEventListener('keydown', function(e) { self.handleKey(e); });
+    },
+
+    showPrompt: function() {
+      if (!this.interactive) return;
+      this.createTypingLine();
+    },
+
+    handleKey: function(e) {
+      if (!this.interactive) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        var cmd = this.input.textContent.trim();
+        this.commitLine();
+        this.input = null;
+        this.cmdHistory.push(cmd);
+        this.histIdx = this.cmdHistory.length;
+        var self = this;
+        setTimeout(function() { self.executeCommand(cmd); }, 60);
+        return;
+      }
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        if (this.input && this.input.textContent.length > 0)
+          this.input.textContent = this.input.textContent.slice(0, -1);
+        return;
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (this.cmdHistory.length === 0) return;
+        this.histIdx = Math.max(0, this.histIdx - 1);
+        this.input.textContent = this.cmdHistory[this.histIdx];
+        return;
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (this.histIdx >= this.cmdHistory.length - 1) {
+          this.histIdx = this.cmdHistory.length;
+          this.input.textContent = '';
+          return;
+        }
+        this.histIdx++;
+        this.input.textContent = this.cmdHistory[this.histIdx];
+        return;
+      }
+      if (e.key === 'Tab') { e.preventDefault(); return; }
+      if (e.key.length === 1 && this.input) {
+        e.preventDefault();
+        this.input.textContent += e.key;
+        this.scrollDown();
+      }
+    },
+
+    executeCommand: function(cmd) {
+      if (!cmd) { this.showPrompt(); return; }
+      var self = this;
+      var handled = false;
+      var eggs = {
+        help: function() {
+          self.addOutputLine('Available commands:', 'highlight');
+          COMMANDS.forEach(function(c) { self.addOutputLine('  ' + c.cmd, 'muted'); });
+          self.addOutputLine('  help, clear, history, fortune, books, about, license', 'muted');
+        },
+        clear: function() { self.clear(); },
+        fortune: function() {
+          var f = ['"Learn from first principles. The rest is commentary."','"Understanding before implementation. Curiosity before ambition."','"The only way to learn deeply is to teach clearly."','"Study ideas from first principles."','"A well-designed system is a pleasure to use."','"Write the program you wish you had when learning."'];
+          self.addOutputLine(f[Math.floor(Math.random() * f.length)]);
+        },
+        history: function() {
+          if (self.cmdHistory.length === 0) { self.addOutputLine('No history.', 'muted'); return; }
+          for (var i = 0; i < self.cmdHistory.length; i++)
+            self.addOutputLine('  ' + (i+1) + '  ' + self.cmdHistory[i]);
+        },
+        books: function() { self.showBooks(); },
+        about: function() { self.addOutputLine('rje.sh \u2014 personal website and living notebook.', 'muted'); },
+        license: function() { self.addOutputLine('MIT License.', 'muted'); },
+        whoami: function() {
+          self.addOutputLine(CONFIG.owner.name, 'highlight');
+          CONFIG.owner.tagline.forEach(function(t) { self.addOutputLine(t); });
+        }
+      };
+      if (eggs[cmd]) { eggs[cmd](); handled = true; }
+      if (!handled) {
+        var found = false;
+        for (var i = 0; i < COMMANDS.length; i++) {
+          if (cmd === COMMANDS[i].cmd) {
+            var lines = COMMANDS[i].output;
+            for (var j = 0; j < lines.length; j++)
+              self.addOutputLine(lines[j].text, lines[j].className || '');
+            if (COMMANDS[i].section) Sections.reveal(COMMANDS[i].section);
+            found = true;
+            break;
+          }
+        }
+        if (!found) self.addOutputLine('bash: ' + cmd + ': command not found', 'error');
+      }
+      this.showPrompt();
+    },
+
+    showBooks: function() {
+      var self = this;
+      self.addOutputLine('Currently Reading:', 'highlight');
+      CONFIG.reading.current.forEach(function(b) { self.addOutputLine('  ' + b); });
+      self.addOutputLine('Completed:', 'highlight');
+      CONFIG.reading.completed.forEach(function(b) { self.addOutputLine('  ' + b); });
+    },
+
+    skipToEnd: function() {
+      COMMANDS.forEach(function(c) { if (c.section) Sections.reveal(c.section); });
+      autoReveal.forEach(function(id) { Sections.reveal(id); });
+      Nav.show();
+      this.enterInteractiveMode();
+      var yr = U.qs('#year');
+      if (yr) yr.textContent = new Date().getFullYear();
+    }
+  };
+
+  /* ===================== Dynamic Command Builder ===================== */
+  var COMMANDS = [];
+  var autoReveal = ['interests', 'current-focus', 'learning-process', 'todo', 'skills', 'notes', 'articles', 'downloads', 'footer'];
+
+  function readConfig(key, fallback) {
+    return CONFIG[key] !== undefined ? CONFIG[key] : fallback;
+  }
+
+  function buildCommands() {
+    COMMANDS.length = 0;
+
+    var treeOutput = [
+      '/home/rje',
+      '\u251c\u2500\u2500 about/', '\u251c\u2500\u2500 philosophy/', '\u251c\u2500\u2500 mission/', '\u251c\u2500\u2500 principles/',
+      '\u251c\u2500\u2500 interests/', '\u251c\u2500\u2500 focus/', '\u251c\u2500\u2500 projects/', '\u251c\u2500\u2500 reading/',
+      '\u251c\u2500\u2500 books/', '\u251c\u2500\u2500 timeline/', '\u251c\u2500\u2500 articles/', '\u251c\u2500\u2500 notes/',
+      '\u251c\u2500\u2500 downloads/', '\u2514\u2500\u2500 contact/'
+    ];
+
+    var owner = readConfig('owner', CONFIG.owner);
+    var philosophy = readConfig('philosophy', CONFIG.philosophy);
+    var mission = readConfig('mission', CONFIG.mission);
+    var principles = readConfig('principles', CONFIG.principles);
+    var projects = readConfig('projects', CONFIG.projects);
+    var reading = readConfig('reading', CONFIG.reading);
+    var books = readConfig('books', CONFIG.books);
+    var timeline = readConfig('timeline', CONFIG.timeline);
+
+    var whoamiOut = [{ text: owner.name, className: 'highlight' }, { text: '' }];
+    owner.tagline.forEach(function(t) { whoamiOut.push({ text: t }); });
+
+    COMMANDS.push({ cmd: 'whoami', output: whoamiOut, section: 'hero' });
+    COMMANDS.push({ cmd: 'tree', output: treeOutput.map(function(l){ return { text: l }; }), section: null, action: 'nav' });
+    COMMANDS.push({ cmd: 'cat philosophy.txt', output: philosophy.map(function(l){ return { text: l }; }), section: 'philosophy' });
+    COMMANDS.push({ cmd: 'cat mission.txt', output: mission.map(function(l){ return { text: l }; }), section: 'mission' });
+    COMMANDS.push({ cmd: 'cat principles.txt', output: principles.map(function(l){ return { text: l }; }), section: 'principles' });
+    COMMANDS.push({ cmd: 'ls projects', output: projects.map(function(p){ return { text: p.title + '/' }; }), section: 'projects' });
+
+    var readingOut = [];
+    readingOut.push({ text: 'Currently Reading:', className: 'highlight' });
+    (reading.current || []).forEach(function(b){ readingOut.push({ text: '  ' + b }); });
+    readingOut.push({ text: 'Completed:', className: 'highlight' });
+    (reading.completed || []).forEach(function(b){ readingOut.push({ text: '  ' + b }); });
+    COMMANDS.push({ cmd: 'cat reading.txt', output: readingOut, section: 'reading' });
+
+    var booksOut = [];
+    booksOut.push({ text: 'Wishlist:', className: 'highlight' });
+    (books.wishlist || []).forEach(function(b){ booksOut.push({ text: '  ' + b }); });
+    booksOut.push({ text: 'Reference:', className: 'highlight' });
+    (books.reference || []).forEach(function(b){ booksOut.push({ text: '  ' + b }); });
+    COMMANDS.push({ cmd: 'cat books.txt', output: booksOut, section: 'books' });
+
+    var logOut = [];
+    timeline.forEach(function(e){
+      e.events.forEach(function(ev){ logOut.push({ text: e.year + '  ' + ev }); });
+    });
+    COMMANDS.push({ cmd: 'git log', output: logOut, section: 'timeline' });
+    COMMANDS.push({ cmd: 'contact', output: [
+      { text: 'GitHub   ' + owner.github, className: 'muted' },
+      { text: 'LinkedIn ' + owner.linkedin, className: 'muted' },
+      { text: 'Email    ' + owner.email, className: 'muted' }
+    ], section: 'contact' });
+  }
+
+  /* ===================== Section Manager ===================== */
+  var Sections = {
+    reveal: function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('hidden');
+      el.classList.add('visible');
+    }
+  };
+
+  /* ===================== Navigation ===================== */
+  var Nav = {
+    el: null, links: null, observer: null,
+    init: function() {
+      this.el = U.qs('#nav');
+      this.links = U.qsa('#nav a');
+    },
+    show: function() {
+      this.el.classList.remove('hidden');
+      this.initObserver();
+    },
+    initObserver: function() {
+      var self = this;
+      var sections = U.qsa('.section');
+      this.observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var id = entry.target.id;
+            self.links.forEach(function(l) { l.classList.remove('active'); });
+            var link = U.qs('#nav a[href="#' + id + '"]');
+            if (link) link.classList.add('active');
+          }
+        });
+      }, { threshold: 0.25, rootMargin: '-60px 0px 0px 0px' });
+      sections.forEach(function(s) { if (s.id) self.observer.observe(s); });
+    }
+  };
+
+  /* ===================== Copy Button ===================== */
+  function initCopyButton() {
+    var btn = U.qs('.copy-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      var email = btn.getAttribute('data-email');
+      if (!email) return;
+      var done = function() {
+        btn.textContent = '[copied]';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = '[copy]';
+          btn.classList.remove('copied');
+        }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(done);
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = email;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  }
+
+  /* ===================== Skip ===================== */
+  var skipIntro = false;
+  function setSkipIntro() {
+    skipIntro = true;
+    var btn = U.qs('#skip-btn');
+    if (btn) btn.hidden = true;
+    Terminal.skipToEnd();
+    try { localStorage.setItem(CONFIG.storageKey, '1'); } catch(e) {}
+  }
+
+  function initSkipButton() {
+    var btn = U.qs('#skip-btn');
+    if (!btn) return;
+    btn.hidden = false;
+    btn.addEventListener('click', function() { if (!skipIntro) setSkipIntro(); });
+  }
+
+  /* ===================== Command Runner ===================== */
+  var Runner = {
+    index: 0,
+    runSequence: function() {
+      var self = this;
+      this.index = 0;
+      function next() {
+        if (skipIntro) return;
+        if (self.index >= COMMANDS.length) { self.done(); return; }
+        self.runCommand(COMMANDS[self.index]).then(function() {
+          if (skipIntro) return;
+          self.index++;
+          setTimeout(next, U.rand(CONFIG.timing.cmdGapMin, CONFIG.timing.cmdGapMax));
+        });
+      }
+      next();
+    },
+    runCommand: function(cmd) {
+      var fullPrompt = CONFIG.prompt + ' ';
+      var input = Terminal.createTypingLine(fullPrompt);
+      var self = this;
+      return Typing.typeText(cmd.cmd, input).then(function() {
+        if (skipIntro) return;
+        return U.sleep(CONFIG.timing.enterPause);
+      }).then(function() {
+        if (skipIntro) return;
+        Terminal.commitLine();
+        return U.sleep(40);
+      }).then(function() {
+        if (skipIntro) return;
+        return self.printOutput(cmd.output);
+      }).then(function() {
+        if (skipIntro) return;
+        if (cmd.action === 'nav') Nav.show();
+        if (cmd.section) Sections.reveal(cmd.section);
+        return U.sleep(CONFIG.timing.sectionDelay);
+      });
+    },
+    printOutput: function(lines) {
+      return new Promise(function(resolve) {
+        var i = 0;
+        function next() {
+          if (skipIntro) { resolve(); return; }
+          if (i >= lines.length) { resolve(); return; }
+          Terminal.addOutputLine(lines[i].text, lines[i].className || '');
+          i++;
+          setTimeout(next, U.rand(CONFIG.timing.outMin, CONFIG.timing.outMax));
+        }
+        next();
+      });
+    },
+    done: function() {
+      if (skipIntro) return;
+      autoReveal.forEach(function(id) { Sections.reveal(id); });
+      Nav.show();
+      Terminal.enterInteractiveMode();
+      var yr = U.qs('#year');
+      if (yr) yr.textContent = new Date().getFullYear();
+      try { localStorage.setItem(CONFIG.storageKey, '1'); } catch(e) {}
+    }
+  };
+
+  /* ===================== Intro ===================== */
+  var Intro = {
+    lines: [
+      { text: 'initializing...', delay: CONFIG.timing.bootLine },
+      { text: 'loading profile...', delay: CONFIG.timing.bootLine },
+      { text: 'loading projects...', delay: CONFIG.timing.bootLine },
+      { text: 'loading knowledge base...', delay: CONFIG.timing.bootLine },
+      { text: '', delay: 40 },
+      { text: 'done.', delay: CONFIG.timing.bootDone, className: 'done' }
+    ],
+    play: function() {
+      var self = this;
+      return new Promise(function(resolve) {
+        var i = 0;
+        function next() {
+          if (skipIntro) { resolve(); return; }
+          if (i >= self.lines.length) { resolve(); return; }
+          var l = self.lines[i];
+          Terminal.addLine(l.text, 'intro-line' + (l.className ? ' ' + l.className : ''));
+          i++;
+          setTimeout(next, l.delay);
+        }
+        next();
+      });
+    }
+  };
+
+  /* ===================== Startup ===================== */
+  function loadConfig() {
+    return fetch('data.json')
+      .then(function(r) { return r.json(); })
+      .catch(function() { return null; });
+  }
+
+  function init() {
+    loadConfig().then(function(data) {
+      if (data) {
+        // merge loaded data into CONFIG
+        for (var key in data) {
+          if (data.hasOwnProperty(key)) CONFIG[key] = data[key];
+        }
+      }
+
+      Terminal.init();
+      Nav.init();
+      initCopyButton();
+
+      // rebuild commands with potentially updated config
+      buildCommands();
+
+      // render sections from config
+      renderProjects();
+      renderReading();
+      renderBooks();
+      renderTimeline();
+      renderTodo();
+      renderSkills();
+      renderPlaceholder('notes', CONFIG.notes || { text: 'Learning notes coming soon.', hint: 'This will become a knowledge base.' });
+      renderPlaceholder('articles', CONFIG.articles || { text: 'Technical articles in progress.', hint: 'Writing about systems programming, mathematics, and philosophy.' });
+      renderPlaceholder('downloads', CONFIG.downloads || { text: 'Resources being prepared.', hint: 'PDF notes, cheat sheets, templates and study guides.' });
+
+      var yr = U.qs('#year');
+      if (yr) yr.textContent = new Date().getFullYear();
+
+      // always animate — no immediate reveal
+      initSkipButton();
+      var skipHandler = function(e) {
+        if ((e.key === 'Escape' || e.key === 's') && !skipIntro) setSkipIntro();
+      };
+      document.addEventListener('keydown', skipHandler);
+      var skipBtn = U.qs('#skip-btn');
+
+      Intro.play().then(function() {
+        if (skipIntro) return;
+        return U.sleep(150);
+      }).then(function() {
+        if (skipIntro) return;
+        Runner.runSequence();
+      }).then(function() {
+        if (skipBtn) skipBtn.hidden = true;
+        document.removeEventListener('keydown', skipHandler);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', init);
+  else
+    init();
+
+})();
+</script>
+</body>
+</html>

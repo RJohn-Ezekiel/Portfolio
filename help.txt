@@ -1,0 +1,46 @@
+1. Everything is editable from data.json now. Here's where each section lives in that file:
+
+
+Section             data.json Key      Lines
+------------------------------------------------
+Hero                owner              2–9
+Philosophy          philosophy         11–17
+Mission             mission            19–26
+Principles          principles         28–36
+Interests           interests          38–49
+Current Focus       currentFocus       51–60
+Projects            projects           62–96
+Reading             reading            98–114
+Books               books              116–126
+Timeline            timeline           128–140
+TODO                todo              142–148
+Skills              skills            150–157
+Notes               notes             159–163
+Articles            articles          165–169
+Downloads           downloads         171–175
+
+
+
+2. Project card format (editable in data.json lines 62-96):
+{
+  "title": "My Project",
+  "desc": "Description of the project.",
+  "status": "In Progress",
+  "tags": "C · Tutorial",
+  "url": "https://github.com/username/repo"
+}
+
+
+- url is optional — remove it to hide the GitHub link
+- tags is a free text string
+
+
+3. Timeline format (editable in data.json lines 128-140):
+{
+  "year": "2026",
+  "events": ["Event one", "Event two"]
+}
+
+4. Add new year objects or events freely.
+5. TODO format (editable in data.json lines 142-148): a simple array of strings.
+6. Notes / Articles / Downloads each have text (main message) and hint (smaller sub-text).
