@@ -489,7 +489,6 @@ main {
       <li><a href="#mission">Mission</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#books">Books</a></li>
-      <li><a href="#notes">Notes</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </div>
@@ -617,21 +616,6 @@ main {
   <h2 class="section-title">Skills</h2>
   <div class="skills-grid" id="skills-grid">
   </div>
-</section>
-
-<section id="notes" class="section">
-  <h2 class="section-title">Notes</h2>
-  <div class="placeholder-box" id="notes-box"></div>
-</section>
-
-<section id="articles" class="section">
-  <h2 class="section-title">Articles</h2>
-  <div class="placeholder-box" id="articles-box"></div>
-</section>
-
-<section id="downloads" class="section">
-  <h2 class="section-title">Downloads</h2>
-  <div class="placeholder-box" id="downloads-box"></div>
 </section>
 
 <section id="contact" class="section">
@@ -882,18 +866,6 @@ main {
     grid.appendChild(frag);
   }
 
-  function renderPlaceholder(id, data) {
-    var box = U.qs('#' + id + '-box');
-    if (!box) return;
-    var p = document.createElement('p');
-    p.textContent = data.text || '';
-    box.appendChild(p);
-    var hint = document.createElement('p');
-    hint.className = 'hint';
-    hint.textContent = data.hint || '';
-    box.appendChild(hint);
-  }
-
   /* ===================== Typing Engine ===================== */
   var Typing = {
     delay: function(char) {
@@ -1105,7 +1077,7 @@ main {
 
   /* ===================== Dynamic Command Builder ===================== */
   var COMMANDS = [];
-  var autoReveal = ['interests', 'current-focus', 'learning-process', 'todo', 'skills', 'notes', 'articles', 'downloads', 'footer'];
+  var autoReveal = ['interests', 'current-focus', 'learning-process', 'todo', 'skills', 'footer'];
 
   function readConfig(key, fallback) {
     return CONFIG[key] !== undefined ? CONFIG[key] : fallback;
@@ -1118,8 +1090,7 @@ main {
       '/home/rje',
       '\u251c\u2500\u2500 about/', '\u251c\u2500\u2500 philosophy/', '\u251c\u2500\u2500 mission/', '\u251c\u2500\u2500 principles/',
       '\u251c\u2500\u2500 interests/', '\u251c\u2500\u2500 focus/', '\u251c\u2500\u2500 projects/', '\u251c\u2500\u2500 reading/',
-      '\u251c\u2500\u2500 books/', '\u251c\u2500\u2500 timeline/', '\u251c\u2500\u2500 articles/', '\u251c\u2500\u2500 notes/',
-      '\u251c\u2500\u2500 downloads/', '\u2514\u2500\u2500 contact/'
+      '\u251c\u2500\u2500 books/', '\u251c\u2500\u2500 timeline/', '\u2514\u2500\u2500 contact/'
     ];
 
     var owner = readConfig('owner', CONFIG.owner);
@@ -1371,9 +1342,7 @@ main {
       renderTimeline();
       renderTodo();
       renderSkills();
-      renderPlaceholder('notes', CONFIG.notes || { text: 'Learning notes coming soon.', hint: 'This will become a knowledge base.' });
-      renderPlaceholder('articles', CONFIG.articles || { text: 'Technical articles in progress.', hint: 'Writing about systems programming, mathematics, and philosophy.' });
-      renderPlaceholder('downloads', CONFIG.downloads || { text: 'Resources being prepared.', hint: 'PDF notes, cheat sheets, templates and study guides.' });
+
 
       var yr = U.qs('#year');
       if (yr) yr.textContent = new Date().getFullYear();
